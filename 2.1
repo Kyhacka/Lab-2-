@@ -1,13 +1,28 @@
-// Определяем исходный список строк
-let strings = ["Hello"; "World"; "F#"; "Functional"; "Programming"]
+open System
 
 // Функция для получения списка длин строк
 let getStringLengths (strList: string list) =
     strList |> List.map (fun s -> s.Length)
 
-// Получаем список длин строк
-let lengths = getStringLengths strings
+// Функция для ввода списка строк с клавиатуры
+let inputStrings () =
+    printfn "Введите строки через запятую:"
+    let input = Console.ReadLine()
+    input.Split(',') // Разделяем строку на массив подстрок по запятой
+    |> Array.map (fun s -> s.Trim()) // Убираем лишние пробелы вокруг строк
+    |> List.ofArray // Преобразуем массив в список
 
-// Выводим результат
-printfn "Исходный список строк: %A" strings
-printfn "Список длин строк: %A" lengths
+// Основная программа
+[<EntryPoint>]
+let main argv =
+    // Ввод списка строк
+    let strings = inputStrings()
+
+    // Получаем список длин строк
+    let lengths = getStringLengths strings
+
+    // Выводим результат
+    printfn "Исходный список строк: %A" strings
+    printfn "Список длин строк: %A" lengths
+
+    0 // Возвращаем код завершения программы
