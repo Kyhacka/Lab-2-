@@ -2,11 +2,11 @@
 let containsDigit digit number =
     number.ToString().Contains(digit.ToString())
 
-// Функция для вычисления суммы элементов списка, содержащих заданную цифру
+// Функция для вычисления суммы элементов списка, содержащих заданную цифру, с использованием List.fold
 let sumOfElementsWithDigit digit numbers =
     numbers
-    |> List.filter (containsDigit digit) // Фильтруем элементы, содержащие цифру
-    |> List.sum // Суммируем оставшиеся элементы
+    |> List.fold (fun acc number -> 
+        if containsDigit digit number then acc + number else acc) 0
 
 // Исходный список чисел
 let numbers = [123; 45; 678; 90; 12; 345; 67]
@@ -15,7 +15,7 @@ let numbers = [123; 45; 678; 90; 12; 345; 67]
 let targetDigit = 5
 
 // Вычисляем сумму
-let result = sumOfNumbersWithDigit targetDigit numbers
+let result = sumOfElementsWithDigit targetDigit numbers
 
 // Выводим результат
 printfn "Исходный список: %A" numbers
