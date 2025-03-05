@@ -1,0 +1,13 @@
+// Определяем исходный список строк
+let strings = ["Hello"; "World"; "F#"; "Functional"; "Programming"]
+
+// Функция для получения списка длин строк
+let getStringLengths (strList: string list) =
+    strList |> List.map (fun s -> s.Length)
+
+// Получаем список длин строк
+let lengths = getStringLengths strings
+
+// Выводим результат
+printfn "Исходный список строк: %A" strings
+printfn "Список длин строк: %A" lengths
