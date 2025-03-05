@@ -1,0 +1,22 @@
+// Функция для проверки, содержит ли число заданную цифру
+let containsDigit digit number =
+    number.ToString().Contains(digit.ToString())
+
+// Функция для вычисления суммы элементов списка, содержащих заданную цифру
+let sumOfElementsWithDigit digit numbers =
+    numbers
+    |> List.filter (containsDigit digit) // Фильтруем элементы, содержащие цифру
+    |> List.sum // Суммируем оставшиеся элементы
+
+// Исходный список чисел
+let numbers = [123; 45; 678; 90; 12; 345; 67]
+
+// Заданная цифра
+let targetDigit = 5
+
+// Вычисляем сумму
+let result = sumOfNumbersWithDigit targetDigit numbers
+
+// Выводим результат
+printfn "Исходный список: %A" numbers
+printfn "Сумма элементов, содержащих цифру %d: %d" targetDigit result
