@@ -10,18 +10,32 @@ let sumOfElementsWithDigit digit numbers =
     |> List.fold (fun acc number -> 
         if containsDigit digit number then acc + number else acc) 0
 
-// Функция для ввода списка чисел с клавиатуры
+// Функция для ввода списка чисел с клавиатуры (по одному числу)
 let inputNumbers () =
-    printfn "Введите числа через пробел:"
-    let input = Console.ReadLine()
-    input.Split(' ') // Разделяем строку на массив подстрок по пробелам
-    |> Array.map int // Преобразуем каждую подстроку в число
-    |> List.ofArray // Преобразуем массив в список
+    let rec readNumbers (acc: int list) =
+        printfn "Введите число (или нажмите Enter для завершения):"
+        let input = Console.ReadLine()
+        if String.IsNullOrEmpty(input) then
+            acc // Возвращаем накопленный список, если введена пустая строка
+        else
+            match Int32.TryParse(input) with
+            | true, number -> readNumbers (number :: acc) // Добавляем число в список и продолжаем
+            | false, _ -> 
+                printfn "Некорректный ввод. Пожалуйста, введите целое число."
+                readNumbers acc // Повторяем ввод
+
+    readNumbers [] // Начинаем с пустого списка
+    |> List.rev // Переворачиваем список, чтобы порядок был как при вводе
 
 // Функция для ввода цифры с клавиатуры
 let inputDigit () =
     printfn "Введите цифру для поиска:"
-    Console.ReadLine() |> int
+    let input = Console.ReadLine()
+    match Int32.TryParse(input) with
+    | true, digit when digit >= 0 && digit <= 9 -> digit // Проверяем, что введена одна цифра
+    | _ -> 
+        printfn "Некорректный ввод. Пожалуйста, введите одну цифру (0-9)."
+        inputDigit() // Повторяем ввод
 
 // Основная программа
 [<EntryPoint>]
