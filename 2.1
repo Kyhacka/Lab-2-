@@ -6,11 +6,16 @@ let getStringLengths (strList: string list) =
 
 // Функция для ввода списка строк с клавиатуры
 let inputStrings () =
-    printfn "Введите строки через запятую:"
-    let input = Console.ReadLine()
-    input.Split(',') // Разделяем строку на массив подстрок по запятой
-    |> Array.map (fun s -> s.Trim()) // Убираем лишние пробелы вокруг строк
-    |> List.ofArray // Преобразуем массив в список
+    let rec readStrings (acc: string list) =
+        printfn "Введите строку (или нажмите Enter для завершения):"
+        let input = Console.ReadLine()
+        if String.IsNullOrEmpty(input) then
+            acc // Возвращаем накопленный список, если введена пустая строка
+        else
+            readStrings (input :: acc) // Добавляем строку в список и продолжаем
+
+    readStrings [] // Начинаем с пустого списка
+    |> List.rev // Переворачиваем список, чтобы порядок был как при вводе
 
 // Основная программа
 [<EntryPoint>]
