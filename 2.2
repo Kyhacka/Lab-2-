@@ -1,56 +1,46 @@
 open System
 
-// Функция для проверки, содержит ли число заданную цифру
+// Функция для ввода чисел по отдельности
+let rec inputNumbers () =
+    printfn "Введите число (или нажмите Enter для завершения):"
+    let input = Console.ReadLine() // Чтение ввода
+    if String.IsNullOrEmpty(input) then
+        [] // Если ввод пустой, завершаем ввод
+    else
+        match Int32.TryParse(input) with
+        | true, number -> number :: inputNumbers() // Добавляем число в список и продолжаем ввод
+        | false, _ -> 
+            printfn "Некорректный ввод. Пожалуйста, введите целое число."
+            inputNumbers() // Повторяем ввод, если ввод некорректен
+
+// Функция для проверки, содержится ли цифра в числе
 let containsDigit digit number =
     number.ToString().Contains(digit.ToString())
 
-// Функция для вычисления суммы элементов списка, содержащих заданную цифру, с использованием List.fold
-let sumOfElementsWithDigit digit numbers =
-    numbers
-    |> List.fold (fun acc number -> 
-        if containsDigit digit number then acc + number else acc) 0
-
-// Функция для ввода списка чисел с клавиатуры (по одному числу)
-let inputNumbers () =
-    let rec readNumbers (acc: int list) =
-        printfn "Введите число (или нажмите Enter для завершения):"
-        let input = Console.ReadLine()
-        if String.IsNullOrEmpty(input) then
-            acc // Возвращаем накопленный список, если введена пустая строка
-        else
-            match Int32.TryParse(input) with
-            | true, number -> readNumbers (number :: acc) // Добавляем число в список и продолжаем
-            | false, _ -> 
-                printfn "Некорректный ввод. Пожалуйста, введите целое число."
-                readNumbers acc // Повторяем ввод
-
-    readNumbers [] // Начинаем с пустого списка
-    |> List.rev // Переворачиваем список, чтобы порядок был как при вводе
-
-// Функция для ввода цифры с клавиатуры
-let inputDigit () =
-    printfn "Введите цифру для поиска:"
-    let input = Console.ReadLine()
-    match Int32.TryParse(input) with
-    | true, digit when digit >= 0 && digit <= 9 -> digit // Проверяем, что введена одна цифра
-    | _ -> 
-        printfn "Некорректный ввод. Пожалуйста, введите одну цифру (0-9)."
-        inputDigit() // Повторяем ввод
-
 // Основная программа
-[<EntryPoint>]
-let main argv =
+let main () =
+    // Ввод заданной цифры
+    printfn "Введите цифру для поиска:"
+    let targetDigit = 
+        match Int32.TryParse(Console.ReadLine()) with
+        | true, digit -> digit
+        | false, _ -> 
+            printfn "Некорректный ввод. Используется цифра по умолчанию: 0."
+            0
+
     // Ввод списка чисел
     let numbers = inputNumbers()
 
-    // Ввод цифры
-    let targetDigit = inputDigit()
-
-    // Вычисляем сумму
-    let result = sumOfElementsWithDigit targetDigit numbers
+    // Используем List.fold для накопления суммы
+    let sum = numbers |> List.fold (fun acc number ->
+        if containsDigit targetDigit number then
+            acc + number // Добавляем число к сумме, если цифра найдена
+        else
+            acc // Иначе оставляем сумму без изменений
+    ) 0
 
     // Выводим результат
-    printfn "Исходный список: %A" numbers
-    printfn "Сумма элементов, содержащих цифру %d: %d" targetDigit result
+    printfn "Сумма чисел, содержащих цифру %d: %d" targetDigit sum
 
-    0 // Возвращаем код завершения программы
+// Запуск программы
+main()
