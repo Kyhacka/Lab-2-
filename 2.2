@@ -1,21 +1,17 @@
 open System
 
-// Функция для ввода чисел по отдельности
-let rec inputNumbers () =
-    printfn "Введите число (или нажмите Enter для завершения):"
+// Функция для ввода списка строк по отдельности
+let rec inputStrings () =
+    printfn "Введите строку (или нажмите Enter для завершения):"
     let input = Console.ReadLine() // Чтение ввода
     if String.IsNullOrEmpty(input) then
         [] // Если ввод пустой, завершаем ввод
     else
-        match Int32.TryParse(input) with
-        | true, number -> number :: inputNumbers() // Добавляем число в список и продолжаем ввод
-        | false, _ -> 
-            printfn "Некорректный ввод. Пожалуйста, введите целое число."
-            inputNumbers() // Повторяем ввод, если ввод некорректен
+        input :: inputStrings() // Добавляем строку в список и продолжаем ввод
 
-// Функция для проверки, содержится ли цифра в числе
-let containsDigit digit number =
-    number.ToString().Contains(digit.ToString())
+// Функция для проверки, содержится ли цифра в строке
+let containsDigit digit (str: string) =
+    str.Contains(digit.ToString())
 
 // Основная программа
 let main () =
@@ -23,24 +19,26 @@ let main () =
     printfn "Введите цифру для поиска:"
     let targetDigit = 
         match Int32.TryParse(Console.ReadLine()) with
-        | true, digit -> digit
-        | false, _ -> 
+        | true, digit when digit >= 0 && digit <= 9 -> digit // Проверяем, что это одна цифра
+        | _ -> 
             printfn "Некорректный ввод. Используется цифра по умолчанию: 0."
             0
 
-    // Ввод списка чисел
-    let numbers = inputNumbers()
+    // Ввод списка строк
+    let strings = inputStrings()
 
-    // Используем List.fold для накопления суммы
-    let sum = numbers |> List.fold (fun acc number ->
-        if containsDigit targetDigit number then
-            acc + number // Добавляем число к сумме, если цифра найдена
-        else
-            acc // Иначе оставляем сумму без изменений
-    ) 0
+    // Используем List.fold для накопления суммы длин строк, содержащих заданную цифру
+    let sum = 
+        strings 
+        |> List.fold (fun acc str ->
+            if containsDigit targetDigit str then
+                acc + str.Length // Добавляем длину строки к сумме, если цифра найдена
+            else
+                acc // Иначе оставляем сумму без изменений
+        ) 0 // Начальное значение аккумулятора — 0
 
     // Выводим результат
-    printfn "Сумма чисел, содержащих цифру %d: %d" targetDigit sum
+    printfn "Сумма длин строк, содержащих цифру %d: %d" targetDigit sum
 
 // Запуск программы
 main()
