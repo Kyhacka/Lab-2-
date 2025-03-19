@@ -1,33 +1,32 @@
 open System
 
-// Функция для получения списка длин строк
 let getStringLengths (strList: string list) =
     strList |> List.map (fun s -> s.Length)
 
-// Функция для ввода списка строк с клавиатуры
-let inputStrings () =
-    let rec readStrings (acc: string list) =
-        printfn "Введите строку (или нажмите Enter для завершения):"
-        let input = Console.ReadLine()
-        if String.IsNullOrEmpty(input) then
-            acc // Возвращаем накопленный список, если введена пустая строка
+let inputStrings (count: int) =
+    let rec readStrings (acc: string list) (remaining: int) =
+        if remaining <= 0 then
+            acc // Возвращаем список, если достигли нужного количества строк
         else
-            readStrings (input :: acc) // Добавляем строку в список и продолжаем
+            printfn "Введите строку (осталось ввести %d строк):" remaining
+            let input = Console.ReadLine()
+            readStrings (input :: acc) (remaining - 1) // Рекурсивно продолжаем ввод
 
-    readStrings [] // Начинаем с пустого списка
-    |> List.rev // Переворачиваем список, чтобы порядок был как при вводе
+    readStrings [] count
+    |> List.rev 
 
-// Основная программа
+
 [<EntryPoint>]
 let main argv =
-    // Ввод списка строк
-    let strings = inputStrings()
+    
+    printfn "Введите количество строк:"
+    let count = int(Console.ReadLine()) 
 
-    // Получаем список длин строк
+    let strings = inputStrings count 
+
     let lengths = getStringLengths strings
 
-    // Выводим результат
     printfn "Исходный список строк: %A" strings
     printfn "Список длин строк: %A" lengths
 
-    0 // Возвращаем код завершения программы
+    0 // САМАЯ ВАЖНАЯ ЧАСТЬ КОДА!!!!!!!!!!!!!!!!!!!!!!!!!!!
