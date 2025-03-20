@@ -28,17 +28,10 @@ let rec inputPositiveNumber prompt =
 [<EntryPoint>]
 let main argv =
     
-    // Ввод количества строк с проверкой
     let count = inputPositiveNumber "Введите количество строк (положительное число):"
-
-    // Ввод строк
     let strings = inputStrings count 
-
-    // Вычисление длин строк
     let lengths = getStringLengths strings
-
-    // Вывод результата
     printfn "Исходный список строк: %A" strings
     printfn "Список длин строк: %A" lengths
 
-    0 // Важнейшая часть кода!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    0 // САМАЯ ВАЖНАЯ ЧАСТЬ КОДА!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
