@@ -3,6 +3,7 @@ open System
 let getStringLengths (strList: string list) =
     strList |> List.map (fun s -> s.Length)
 
+// Функция для ввода строк до достижения заданного количества
 let inputStrings (count: int) =
     let rec readStrings (acc: string list) (remaining: int) =
         if remaining <= 0 then
@@ -15,18 +16,29 @@ let inputStrings (count: int) =
     readStrings [] count
     |> List.rev 
 
+// Функция для ввода числа с проверкой корректности
+let rec inputPositiveNumber prompt =
+    printfn "%s" prompt
+    match Int32.TryParse(Console.ReadLine()) with
+    | true, value when value > 0 -> value // Возвращаем число, если оно положительное
+    | _ -> 
+        printfn "Некорректный ввод. Пожалуйста, введите положительное число."
+        inputPositiveNumber prompt // Повторяем запрос
 
 [<EntryPoint>]
 let main argv =
     
-    printfn "Введите количество строк:"
-    let count = int(Console.ReadLine()) 
+    // Ввод количества строк с проверкой
+    let count = inputPositiveNumber "Введите количество строк (положительное число):"
 
+    // Ввод строк
     let strings = inputStrings count 
 
+    // Вычисление длин строк
     let lengths = getStringLengths strings
 
+    // Вывод результата
     printfn "Исходный список строк: %A" strings
     printfn "Список длин строк: %A" lengths
 
-    0 // САМАЯ ВАЖНАЯ ЧАСТЬ КОДА!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    0 // Важнейшая часть кода!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
