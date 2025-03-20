@@ -13,25 +13,31 @@ let rec inputStrings (count: int) =
 let containsDigit digit (str: string) =
     str.Contains(digit.ToString())
 
+// Функция для ввода числа с проверкой корректности
+let rec inputPositiveNumber prompt =
+    printfn "%s" prompt
+    match Int32.TryParse(Console.ReadLine()) with
+    | true, value when value > 0 -> value // Возвращаем число, если оно положительное
+    | _ -> 
+        printfn "Некорректный ввод. Пожалуйста, введите положительное число."
+        inputPositiveNumber prompt // Повторяем запрос
+
+// Функция для ввода цифры с проверкой корректности
+let rec inputDigit prompt =
+    printfn "%s" prompt
+    match Int32.TryParse(Console.ReadLine()) with
+    | true, digit when digit >= 0 && digit <= 9 -> digit // Проверяем, что это одна цифра
+    | _ -> 
+        printfn "Некорректный ввод. Пожалуйста, введите цифру от 0 до 9."
+        inputDigit prompt // Повторяем запрос
+
 // Основная программа
 let main () =
     // Ввод заданной цифры
-    printfn "Введите цифру для поиска:"
-    let targetDigit = 
-        match Int32.TryParse(Console.ReadLine()) with
-        | true, digit when digit >= 0 && digit <= 9 -> digit // Проверяем, что это одна цифра
-        | _ -> 
-            printfn "Некорректный ввод. Используется цифра по умолчанию: 0."
-            0
+    let targetDigit = inputDigit "Введите цифру для поиска (от 0 до 9):"
 
     // Ввод количества строк
-    printfn "Введите количество строк:"
-    let count = 
-        match Int32.TryParse(Console.ReadLine()) with
-        | true, count when count > 0 -> count // Проверяем, что количество строк положительное
-        | _ -> 
-            printfn "Некорректный ввод. Используется значение по умолчанию: 3."
-            3
+    let count = inputPositiveNumber "Введите количество строк (положительное число):"
 
     // Ввод списка строк
     let strings = inputStrings count
